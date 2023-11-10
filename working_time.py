@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import List, Dict, Tuple, Optional
 
-busy = [
+busy: List[Dict[str, str]] = [
     {'start': '10:30',
      'stop': '10:50'},
     {'start': '18:40',
@@ -16,10 +16,6 @@ busy = [
 
 work_begins: str = '09:00'
 work_ends: str = '21:00'
-default_interval: int = 30
-
-start: datetime = datetime.strptime(work_begins, '%H:%M')
-stop: datetime = datetime.strptime(work_ends, '%H:%M')
 
 
 def working_time(work_start: datetime,
@@ -28,7 +24,8 @@ def working_time(work_start: datetime,
     """
     Creates a list of working time periods. Excluding the breaks.
     1. Converts breaks into datetime format
-    2. Creates a list of working time periods
+    2. Sorts the breaks ascending
+    3. Creates a list of working time periods
     """
     working_periods: List[Optional[Tuple[datetime, datetime]]] = []  # pretty sure the type hint is wrong...
     breaks_datetime: List = []
@@ -39,7 +36,8 @@ def working_time(work_start: datetime,
         break_stop = datetime.strptime(break_period['stop'], '%H:%M')
         breaks_datetime.append((break_start, break_stop))
 
-# слить в один цикл?
+    breaks_datetime.sort()
+
     for period in breaks_datetime:
         break_start = period[0]
         break_stop = period[1]
@@ -53,7 +51,8 @@ def working_time(work_start: datetime,
     return working_periods
 
 
-def break_into_intervals(working_periods: List[Tuple[datetime, datetime]], minutes=30) -> List[Tuple[datetime, datetime]]:
+def break_into_intervals(working_periods: List[Tuple[datetime, datetime]],
+                         minutes=30) -> List[Tuple[datetime, datetime]]:
     """
     Divides the provided working time into periods according to the interval.
     Default interval is minutes 30.
@@ -67,7 +66,9 @@ def break_into_intervals(working_periods: List[Tuple[datetime, datetime]], minut
 
         current_time = start_time
         while current_time + time_interval <= stop_time:
-            working_periods_divided.append((current_time, current_time + time_interval))
+            working_periods_divided.append(
+                (current_time, current_time + time_interval)
+            )
             current_time += time_interval
 
     return working_periods_divided
@@ -81,6 +82,8 @@ def print_results(working_periods_divided) -> None:
 
 
 if __name__ == '__main__':
+    start: datetime = datetime.strptime(work_begins, '%H:%M')
+    stop: datetime = datetime.strptime(work_ends, '%H:%M')
     undivided_worktime = working_time(start, stop, busy)
     divided_worktime = break_into_intervals(undivided_worktime)
     print_results(divided_worktime)
