@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
 from typing import List, Dict, Tuple
 
+work_begins: str = '09:00'
+work_ends: str = '21:00'
 busy: List[Dict[str, str]] = [
     {'start': '10:30',
      'stop': '10:50'},
@@ -13,9 +15,6 @@ busy: List[Dict[str, str]] = [
     {'start': '20:05',
      'stop': '20:20'}
 ]
-
-work_begins: str = '09:00'
-work_ends: str = '21:00'
 
 
 def working_time(
