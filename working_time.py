@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import List, Dict, Tuple, Optional
+from typing import List, Dict, Tuple
 
 busy: List[Dict[str, str]] = [
     {'start': '10:30',
@@ -18,16 +18,18 @@ work_begins: str = '09:00'
 work_ends: str = '21:00'
 
 
-def working_time(work_start: datetime,
-                 work_end: datetime,
-                 breaks: List[Dict[str, str]]) -> List[Tuple[datetime, datetime]]:
+def working_time(
+    work_start: datetime,
+    work_end: datetime,
+    breaks: List[Dict[str, str]]
+) -> List[Tuple[datetime, datetime]]:
     """
     Creates a list of working time periods. Excluding the breaks.
     1. Converts breaks into datetime format
     2. Sorts the breaks ascending
     3. Creates a list of working time periods
     """
-    working_periods: List[Optional[Tuple[datetime, datetime]]] = []  # pretty sure the type hint is wrong...
+    working_periods: List = []
     breaks_datetime: List = []
     previous_stop: datetime = work_start
 
@@ -51,8 +53,10 @@ def working_time(work_start: datetime,
     return working_periods
 
 
-def break_into_intervals(working_periods: List[Tuple[datetime, datetime]],
-                         minutes=30) -> List[Tuple[datetime, datetime]]:
+def break_into_intervals(
+    working_periods: List[Tuple[datetime, datetime]],
+    minutes: int = 30
+) -> List[Tuple[datetime, datetime]]:
     """
     Divides the provided working time into periods according to the interval.
     Default interval is minutes 30.
